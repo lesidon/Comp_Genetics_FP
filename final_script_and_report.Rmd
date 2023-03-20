@@ -57,6 +57,7 @@ summary(QTL_LR4RalstoDataRaw)
 
 # ANALYSIS OF THE QUALITY OF PHENOTYPIC AND GENOTYPIC DATA
 
+<!--I took the text from the script QTL_LR5Ralsto_Complete.R, so we will have to change it-->
 
 Graph 1: Evaluation of the quality of genotypic data: visualization of missing data.
 Graph 2: Visualization of the genetic map
@@ -80,5 +81,11 @@ plotMissing(QTL_LR4RalstoDataRaw, reorder=TRUE)
 
 ## Further analysis of the quality of genotypes
 
+Calculation of recombination fractions
 
+```{r rf, echo=FALSE}
+QTL_LR4RalstoDataRaw<-est.rf(QTL_LR4RalstoDataRaw)
+plotRF(QTL_LR4RalstoDataRaw)
+```
 
+The plot above informs us that there is no problem with positioning markers on chromosomes.
