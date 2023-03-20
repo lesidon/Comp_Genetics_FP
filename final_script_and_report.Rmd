@@ -1,0 +1,22 @@
+---
+title: "Final Project"
+author: "Leonid Sidorov, Vasiliy Zubarev, Yawar Habib"
+output:
+  pdf_document:
+    latex_engine: pdflatex
+    toc: yes
+    number_sections: yes
+    toc_depth: 3
+    fig_width: 5
+    fig_height: 4
+geometry: margin = 2cm
+lof: no
+fontsize: 10pt
+documentclass: article
+classoption: a4paper
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
