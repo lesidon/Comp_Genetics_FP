@@ -81,11 +81,125 @@ plotMissing(QTL_LR4RalstoDataRaw, reorder=TRUE)
 
 ## Further analysis of the quality of genotypes
 
-Calculation of recombination fractions
+* Calculation of recombination fractions.
 
 ```{r rf, echo=FALSE}
-QTL_LR4RalstoDataRaw<-est.rf(QTL_LR4RalstoDataRaw)
+QTL_LR4RalstoDataRaw <- est.rf(QTL_LR4RalstoDataRaw)
 plotRF(QTL_LR4RalstoDataRaw)
 ```
 
 The plot above informs us that there is no problem with positioning markers on chromosomes.
+
+* Calculation of probabilities of genotyping errors
+
+```{r}
+QTL_LR4RalstoDataRaw <- calc.errorlod(QTL_LR4RalstoDataRaw, error.prob=0.1)
+top.errorlod(QTL_LR4RalstoDataRaw)
+
+plotGeno(QTL_LR4RalstoDataRaw)
+
+#Observed marker genotype data for RIL population. White and black circles correspond to the genotypes AA, and BB (AB are ignored due to convert2riself), respectively. 
+#Genotypes flagged by red squares would be indicated to be likely genotyping errors. Here there is none.
+#Blue crosses indicate recombination events.
+```
+
+## More detailed analysis of phenotypes
+
+In advance to QTL analysis, we performed ANOVA in order to see if there is an effect of the "line" factor on the phenotypic trait analyzed, and to computed adjusted means corrected from the block or environmental effect.
+
+```{r echo=TRUE}
+Pheno_Score5dpi<-data.frame(indice=QTL_LR4RalstoDataRaw$pheno$scoreajst5dpi)
+str(Pheno_Score5dpi)
+shapiro.test(Pheno_Score5dpi$indice)
+
+Pheno_Score14dpi<-data.frame(indice=QTL_LR4RalstoDataRaw$pheno$scoreajst14dpi)
+str(Pheno_Score14dpi)
+shapiro.test(Pheno_Score14dpi$indice)
+
+# I do not really understand where to take Moyenne.logcfy column
+
+# Pheno_cfu<-data.frame(indice=QTL_LR5RalstoDataRaw$pheno$Moyenne.logcfu)
+# Pheno_cfu
+# str(Pheno_cfu)
+# shapiro.test(Pheno_cfu$indice)
+```
+
+For 5 dpi we do not have normal data.
+
+# DETECTION DE QTL PAR SCANONE: mr method ie Marker regression or ANOVA at each marker (Single QTL genome scan)
+
+As it was stated in the task, we would be able to detect QTL from mean disease scores 5 and 14 dpi.
+
+## Analysis on the disease score at 5dpi
+
+```{r scanone_rm_5, echo=TRUE}
+QTLT5_LR4Ralsto.mr <- scanone(QTL_LR4RalstoDataRaw, pheno.col=3, method="mr")
+summary(QTLT7_LR4Ralsto.mr)
+```
+
+## Analysis on the disease score at 14dpi
+
+```{r scanone_rm_14}
+QTLT14_LR4Ralsto.mr<-scanone(QTL_LR4RalstoDataRaw, pheno.col=7,method="mr") #cfu
+summary(QTLT14_LR4Ralsto.mr)
+```
+
+Marker MTE32 shows quite interesting LOD score - so probably it is linked to the QTL.
+
+
+# Simple interval mapping by maximum likelihood (Single QTL genome scan)
+
+Imputing the missing values.
+
+```{r calc_miss_values}
+QTL_LR4RalstoData<- calc.genoprob(QTL_LR4RalstoDataRaw, step=1, error.prob=0.01)
+```
+
+## Analysis on the disease score at 5dpi
+
+* QTL detection
+
+```{r qtl_detection_em}
+QTLT5_LR4Ralsto.em<-scanone(QTL_LR4RalstoData, pheno.col=3,method="em") #T5
+summary(QTLT5_LR4Ralsto.em) # only the lod max on each chromosome
+```
+
+* Graphic visualization
+
+```{r plot_em}
+plot(QTLT5_LR4Ralsto.em)
+```
+
+* Graphic visualization of the results of the genotype effect at the marker closest to the major QTL peak
+
+```{r gen_5_graph_vis}
+max(QTLT5_LR4Ralsto.em)
+find.marker(QTL_LR4RalstoData, chr="LG5", pos=15.1) #Goal: find the marker closest to the QTL's lod peak on ch5
+
+effectplot(QTL_LR4RalstoData, mname1="LG5@15.1", pheno.col=3, main="LR5 Ralstonia - QTL LG5 effect")
+
+plotPXG(QTL_LR4RalstoData, marker="MTE32", pheno.col=3, main="LR5 Ralstonia - QTL LG5 effect")
+```
+
+* Calculation of QTL confidence intervals (CI) and identification of flanking markers
+
+```{r}
+lodint(QTLT5_LR4Ralsto.em, chr="LG5", expandtomarkers=TRUE)
+lodint(QTLT5_LR4Ralsto.em, chr="LG5", expandtomarkers=TRUE, drop=1) #20cM between MTE32 and MTE34
+lodint(QTLT5_LR4Ralsto.em, chr="LG5", drop=1) #20cM between MTE32 and MTE34
+# the CI is given in positions, not in markers:
+ICfinT7<-lodint(QTLT5_LR4Ralsto.em, chr="LG5", drop=1)#12cM
+```
+
+* Graphic visualization listing all the information concerning the major QTL
+
+```{r graph_vis_all_5_em}
+plot(QTLT5_LR4Ralsto.em,chr="LG5",
+     show.marker.names=T,
+	xlab="Map Position on LG5 (cM)",
+     ylab="LOD Score LR4Ralsto_ScoreT5")
+abline(h=3,col="darkgreen",lty=2)
+abline(v=c(ICfinT7$pos), col=c("blue", "red", "blue"), lty=c(2,1,2))
+```
+
+
