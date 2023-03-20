@@ -17,6 +17,68 @@ classoption: a4paper
 ---
 
 ```{r setup, include=FALSE}
+# To erase all graphs
+graphics.off()
+# To erase objects from the working space - Clean up of the memory
+rm(list = ls())
+# use of the constraint 'set-to-zero' for ANOVAs
+options(contrasts=c('contr.treatment','contr.poly'))
+
+suppressPackageStartupMessages(
+  {
+    library(qtl)
+    library(lattice)
+    library(tidyverse)
+  })
+#can also use 'contr.sum' for a 'sum-to-zero' constraint
+
+# postscript figures with colours
+trellis.device(device = postscript,color = T)
+
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+
+# Data
+
+Firstly, we import the data.
+
+```{r data_import, echo=TRUE}
+QTL_LR4RalstoDataRaw <- read.cross("csvs", genfile="data/LR4_CGPM_avril 2007_geno.csvs", 
+                                     phefile="data/LR4_Ralsto_AllScores.csvs", sep=";", dec=",")
+
+#genfile: file containing genotypes, phefile:file containing phenotypes.
+
+QTL_LR4RalstoDataRaw <- convert2riself(QTL_LR4RalstoDataRaw)
+
+#The function convert2riself converts the type of crossing indicating that the analysis was made on RILs obtained by self-fertilization.
+summary(QTL_LR4RalstoDataRaw)
+```
+
+# ANALYSIS OF THE QUALITY OF PHENOTYPIC AND GENOTYPIC DATA
+
+
+Graph 1: Evaluation of the quality of genotypic data: visualization of missing data.
+Graph 2: Visualization of the genetic map
+Graph 3 to 15 (phe 1 to phe 13): Distribution of phenotypic data for the different traits evaluated within the population of RILs
+
+```{r graphic_visualistion, echo=FALSE, fig.align='center', fig.cap=''}
+plot(QTL_LR4RalstoDataRaw)
+```
+
+Detail of the genetic map.
+
+```{r detail_gen_map, echo=FALSE}
+plot.map(QTL_LR4RalstoDataRaw, show.marker.names=TRUE)
+```
+
+Details of missing genotypic data.
+
+```{r missing_genotypic_data, echo=FALSE}
+plotMissing(QTL_LR4RalstoDataRaw, reorder=TRUE)
+```
+
+## Further analysis of the quality of genotypes
+
+
 
