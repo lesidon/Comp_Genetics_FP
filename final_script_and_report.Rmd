@@ -579,19 +579,51 @@ plot(Phenotype.MQMnocofactor,
 
 abline(h=2.5,lty=2)
 
-legend('topright',col=c('darkgreen','red'),lwd=2,legend=c(paste(abrev,'; ehk'),paste(abrev,'; mqm')))
+legend('topright',col=c('blue','red'),lwd=2,legend=c(paste(abrev,'; ehk'),paste(abrev,'; mqm')))
 
 ```
 
 ##MQM model with cofactors
 "Forward" cofactor search
 ```{r}
+find.marker(m.imp, chr= summary(Phenotype.MQMnocofactor)$chr, pos= summary(Phenotype.MQMnocofactor)$pos)
+index1 <- find.markerindex(m.imp, find.marker(m.imp, chr= summary(Phenotype.MQMnocofactor)$chr, pos= summary(Phenotype.MQMnocofactor)$pos))
+index1
 ```
 
 ```{r}
+set1 <- mqmsetcofactors(m.imp,cofactors=index1)
+set1
+``` 
+
+Detect QTL by MQM with cofactors
+```{r}
+Phenotype.MQMset1 <- mqmscan(m.imp , set1, cofactor.significance=0.99, pheno.col=phenotype, window.size=10,step.size=1)
+summary(Phenotype.MQMset1)
+plot(mqmgetmodel(Phenotype.MQMset1))
 ```
 
 ```{r}
+plot(QTLall_LR4Ralsto_5dpi.hk, chr="LG5",
+     show.marker.names=T, col=c('red'),
+     xlab="Map Position on LG5 (cM)",
+     ylab="LOD Score"
+     )
+plot(Phenotype.MQMnocofactor, chr="LG5",
+     col=c('blue'),
+#	xlab="Map Position on LG5 (cM)",
+#     ylab="LOD Score",
+     add=T
+     )
+plot(Phenotype.MQMset1, chr="LG5",
+     col=c('darkgreen'),
+#	xlab="Map Position on LG5 (cM)",
+#     ylab="LOD Score",
+     add=T
+     )
+abline(h=3,lty=2)
+legend('topright',col=c('blue','red','darkgreen'),lwd=2,legend=c(paste(abrev,'; mqm-0'),paste(abrev,'; ehk'),paste(abrev,'; mqm-1')))
+
 ```
 
 
