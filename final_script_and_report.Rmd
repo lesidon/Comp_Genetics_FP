@@ -393,6 +393,7 @@ gnum<-cbind(as.numeric(g==1), as.numeric(g==2))
 QTLT5_LR4Ralsto.hk.MTE32 <- scanone(QTL_LR4RalstoData, pheno.col=3, method="hk", addcovar=gnum)
 summary(QTLT5_LR4Ralsto.hk.MTE32)
 ```
+
 ```{r}
 plot(QTLT5_LR4Ralsto.hk, QTLT5_LR4Ralsto.hk.MTE32, col=c("blue", "red"))
 ```
@@ -401,8 +402,7 @@ plot(QTLT5_LR4Ralsto.hk, QTLT5_LR4Ralsto.hk.MTE32, col=c("blue", "red"))
 lodint(QTLT5_LR4Ralsto.hk, chr="LG5", expandtomarkers=TRUE, drop=1)
 ```
 
-
-## Do we have problems here?
+### Do we have problems here?
 
 ```{r}
 # QTLT5_LR4Ralsto.hk.MTE32operm <- scanone(QTL_LR4RalstoData, pheno.col=3, method="hk", addcovar=gnum, n.perm=1000)
@@ -413,7 +413,8 @@ load("QTLT5_LR4Ralsto.hk.MTE32operm.RData")
 
 summary(QTLT5_LR4Ralsto.hk.MTE32operm)
 ```
-## Using MTE33 as a cofactor
+
+### Using MTE33 as a cofactor
 
 ```{r}
 g4<-pull.geno(QTL_LR4RalstoData) [, "MTE33"]
@@ -438,7 +439,7 @@ lodint(QTLT5_LR4Ralsto.hk.MTE32, chr="LG5", drop=1)
 lodint(QTLT5_LR4Ralsto.hk.MTE33, chr="LG5", drop=1)
 ```
 
-## Graphic representation of QTL on genetic map
+### Graphic representation of QTL on genetic map
 
 ```{r}
 qtlGraphMap<-makeqtl(QTL_LR4RalstoData, chr=c("LG5"), pos=16, what="prob")
@@ -448,5 +449,96 @@ effectplot(QTL_LR4RalstoData, mname1="LG5@16", pheno.col=3, main="LR5 ralsto T5 
 plotPXG(QTL_LR4RalstoData, marker="MTE32", pheno.col=3, main="LR5 ralsto T5 QTL LG5 effect")
 ```
 
+
+## Analysis on the disease score at 14dpi.
+
+```{r}
+max(QTLall_LR4Ralsto.hk, lodcolumn=6)#T5
+QTLT14_LR4Ralsto.hk<-scanone(QTL_LR4RalstoData, pheno.col=7, method="hk")
+plot(QTLT5_LR4Ralsto.hk)
+```
+
+```{r}
+max(QTLT14_LR4Ralsto.hk)
+find.marker(QTL_LR4RalstoData, chr="LG5", pos=18)
+```
+Here we have the same situation as for 5 dpi.
+
+
+* Using MTE32 as a cofactor
+
+```{r}
+g<-pull.geno(QTL_LR4RalstoData) [, "MTE32"]
+mean(is.na(g))
+```
+About 3.7% of the individuals are not genotyped on this marker.
+
+```{r}
+gnum<-cbind(as.numeric(g==1), as.numeric(g==2))
+QTLT14_LR4Ralsto.hk.MTE32 <- scanone(QTL_LR4RalstoData, pheno.col=7, method="hk", addcovar=gnum)
+summary(QTLT14_LR4Ralsto.hk.MTE32)
+```
+
+No marker is significant here as well.
+
+```{r}
+plot(QTLT14_LR4Ralsto.hk, QTLT14_LR4Ralsto.hk.MTE32, col=c("blue", "red"))
+```
+
+```{r}
+lodint(QTLT14_LR4Ralsto.hk, chr="LG5", expandtomarkers=TRUE, drop=1)
+```
+
+### Do we have problems here?
+
+```{r}
+# QTLT14_LR4Ralsto.hk.MTE32operm <- scanone(QTL_LR4RalstoData, pheno.col=7, method="hk", addcovar=gnum, n.perm=1000)
+# save(QTLT14_LR4Ralsto.hk.MTE32operm, file = "QTLT14_LR4Ralsto.hk.MTE32operm.RData")
+
+load("QTLT14_LR4Ralsto.hk.MTE32operm.RData")
+
+
+summary(QTLT5_LR4Ralsto.hk.MTE32operm)
+```
+
+### Using MTE33 as a cofactor
+
+```{r}
+g4<-pull.geno(QTL_LR4RalstoData) [, "MTE33"]
+mean(is.na(g4))
+```
+As we stated earlier, ~18% of the individuals are not genotyped on this marker.
+
+```{r}
+QTLT14_LR4Ralsto.hk.MTE33<-scanone(QTL_LR4RalstoData, pheno.col=7, method="hk", addcovar=g4)
+summary(QTLT14_LR4Ralsto.hk.MTE33)
+```
+
+```{r}
+plot(QTLT14_LR4Ralsto.hk, QTLT14_LR4Ralsto.hk.MTE33, col=c("blue", "red"))
+plot(QTLT14_LR4Ralsto.hk, QTLT14_LR4Ralsto.hk.MTE33, chr="LG5",col=c("blue", "red"))
+plot(QTLT14_LR4Ralsto.hk, QTLT14_LR4Ralsto.hk.MTE32, QTLT14_LR4Ralsto.hk.MTE33, chr="LG5",col=c("blue", "darkgreen", "red"))
+```
+
+```{r}
+lodint(QTLT14_LR4Ralsto.hk, chr="LG5", drop=1)
+lodint(QTLT14_LR4Ralsto.hk.MTE32, chr="LG5", drop=1)
+lodint(QTLT14_LR4Ralsto.hk.MTE33, chr="LG5", drop=1)
+```
+
+### Graphic representation of QTL on genetic map
+
+```{r}
+qtlGraphMap<-makeqtl(QTL_LR4RalstoData, chr=c("LG5"), pos=18, what="prob")
+
+plot(qtlGraphMap, main="LR5Ralsto T5")
+effectplot(QTL_LR4RalstoData, mname1="LG5@18", pheno.col=7, main="LR5 ralsto T5 QTL LG5 effect")
+plotPXG(QTL_LR4RalstoData, marker="MTE32", pheno.col=7, main="LR5 ralsto T5 QTL LG5 effect")
+```
+
+
+It is interesting that we see more effect of this QTL. <!--Am I right, guys?-->
+
+# DETECTION OF QTL with Multiple QTL Mapping
 
 
