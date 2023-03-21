@@ -219,7 +219,7 @@ plot(QTLT14_LR4Ralsto.em)
 
 * Graphic visualization of the results of the genotype effect at the marker closest to the major QTL peak
 
-```{r gen_5_graph_vis}
+```{r gen_5_graph_vis, echo=TRUE, message=FALSE, warning=FALSE}
 max(QTLT14_LR4Ralsto.em)
 find.marker(QTL_LR4RalstoData, chr="LG5", pos=17) #Goal: find the marker closest to the QTL's lod peak on ch5
 
@@ -230,7 +230,7 @@ plotPXG(QTL_LR4RalstoData, marker="MTE32", pheno.col=7, main="LR5 Ralstonia - QT
 
 * Calculation of QTL confidence intervals (CI) and identification of flanking markers
 
-```{r}
+```{r echo=TRUE}
 lodint(QTLT14_LR4Ralsto.em, chr="LG5", expandtomarkers=TRUE)
 lodint(QTLT14_LR4Ralsto.em, chr="LG5", expandtomarkers=TRUE, drop=1) #20cM between MTE32 and MTE34
 lodint(QTLT14_LR4Ralsto.em, chr="LG5", drop=1) #20cM between MTE32 and MTE34
@@ -259,5 +259,70 @@ plot(QTLT5_LR4Ralsto.em, QTLT14_LR4Ralsto.em, chr="LG5",
 abline(h=3,col="darkgreen",lty=2)
 abline(v=c(ICfinT5$pos), col=c("black"), lty=c(2,1,2))
 abline(v=c(ICfinT14$pos), col=c("red"), lty=c(2,1,2))
+```
+
+# Imputation method or anova after imputation of missing genotypes (Single QTL genome scan)
+
+* Imputation of the missing data
+
+```{r miss_value_imp}
+QTL_LR4RalstoDataImp<- sim.geno(QTL_LR4RalstoData, step=2, n.draws=16, error.prob=0.01)    
+```
+
+## QTL detection for 5 dpi
+
+```{r qtl_detection_imp}
+QTLT5_LR4Ralsto.imp<-scanone(QTL_LR4RalstoDataImp, pheno.col=3,method="imp")#T5
+QTLT5_LR4Ralsto.imp
+summary(QTLT5_LR4Ralsto.imp)
+```
+
+* Graphic visualization comparing the major QTL on LG5 detected by the imp and em method.
+
+```{r compar_of_em_and_imp}
+plot(QTLT5_LR4Ralsto.imp, QTLT5_LR4Ralsto.em, chr="LG5", col=c("green", "pink"), ylab="LodScore Ralsto LR4 T5")
+```
+
+## QTL detection for 14 dpi
+
+```{r qtl_detection_imp}
+QTLT14_LR4Ralsto.imp<-scanone(QTL_LR4RalstoDataImp, pheno.col=7,method="imp")#T14
+QTLT14_LR4Ralsto.imp
+summary(QTLT14_LR4Ralsto.imp)
+```
+
+* Graphic visualization comparing the major QTL on LG5 detected by the imp and em method.
+
+```{r compar_of_em_and_imp}
+plot(QTLT14_LR4Ralsto.imp, QTLT14_LR4Ralsto.em, chr="LG5", col=c("green", "pink"), ylab="LodScore Ralsto LR4 T14")
+```
+
+# DETECTION OF QTL with SCANONE (Single QTL genome scan): hk method Haley-Knott regression
+
+## Detection of QTL with the Haley-Knott regression method
+
+```{r}
+QTLall_LR4Ralsto.hk <- scanone(QTL_LR4RalstoData, pheno.col=2:10,method="hk")      # all cfu + scoredpi phenotypes
+summary(QTLall_LR4Ralsto.hk)
+```
+
+* Graphic visualization
+
+```{r}
+plot(QTLall_LR4Ralsto.hk, lodcolumn=1:9, col=c("blue", "red", "green"))
+plot(QTLall_LR4Ralsto.hk, lodcolumn=1:3, col=c("blue", "red", "green"))
+plot(QTLall_LR4Ralsto.hk, lodcolumn=2:4, col=c("blue", "red", "green"))
+plot(QTLall_LR4Ralsto.hk, lodcolumn=4:6, col=c("pink", "orange", "grey"))
+plot(QTLall_LR4Ralsto.hk, lodcolumn=7:9, col=c("violet", "cyan", "yellow"))
+```
+
+```{r}
+# why do we need so many summaries?
+
+summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=1)  # cfu
+summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=2)  # T3
+summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=3)  # T5
+summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=5)  # T7
+summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=7)  # T14
 ```
 
