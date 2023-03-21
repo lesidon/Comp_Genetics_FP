@@ -188,7 +188,7 @@ lodint(QTLT5_LR4Ralsto.em, chr="LG5", expandtomarkers=TRUE)
 lodint(QTLT5_LR4Ralsto.em, chr="LG5", expandtomarkers=TRUE, drop=1) #20cM between MTE32 and MTE34
 lodint(QTLT5_LR4Ralsto.em, chr="LG5", drop=1) #20cM between MTE32 and MTE34
 # the CI is given in positions, not in markers:
-ICfinT7<-lodint(QTLT5_LR4Ralsto.em, chr="LG5", drop=1)#12cM
+ICfinT5<-lodint(QTLT5_LR4Ralsto.em, chr="LG5", drop=1)#12cM
 ```
 
 * Graphic visualization listing all the information concerning the major QTL
@@ -199,7 +199,65 @@ plot(QTLT5_LR4Ralsto.em,chr="LG5",
 	xlab="Map Position on LG5 (cM)",
      ylab="LOD Score LR4Ralsto_ScoreT5")
 abline(h=3,col="darkgreen",lty=2)
-abline(v=c(ICfinT7$pos), col=c("blue", "red", "blue"), lty=c(2,1,2))
+abline(v=c(ICfinT5$pos), col=c("blue", "red", "blue"), lty=c(2,1,2))
 ```
 
+## Analysis on the disease score at 14dpi
+
+* QTL detection
+
+```{r qtl_detection_em}
+QTLT14_LR4Ralsto.em <- scanone(QTL_LR4RalstoData, pheno.col=7,method="em") #T14
+summary(QTLT14_LR4Ralsto.em) # only the lod max on each chromosome
+```
+
+* Graphic visualization
+
+```{r plot_em}
+plot(QTLT14_LR4Ralsto.em)
+```
+
+* Graphic visualization of the results of the genotype effect at the marker closest to the major QTL peak
+
+```{r gen_5_graph_vis}
+max(QTLT14_LR4Ralsto.em)
+find.marker(QTL_LR4RalstoData, chr="LG5", pos=17) #Goal: find the marker closest to the QTL's lod peak on ch5
+
+effectplot(QTL_LR4RalstoData, mname1="LG5@17", pheno.col=7, main="LR5 Ralstonia - QTL LG5 effect")
+
+plotPXG(QTL_LR4RalstoData, marker="MTE32", pheno.col=7, main="LR5 Ralstonia - QTL LG5 effect")
+```
+
+* Calculation of QTL confidence intervals (CI) and identification of flanking markers
+
+```{r}
+lodint(QTLT14_LR4Ralsto.em, chr="LG5", expandtomarkers=TRUE)
+lodint(QTLT14_LR4Ralsto.em, chr="LG5", expandtomarkers=TRUE, drop=1) #20cM between MTE32 and MTE34
+lodint(QTLT14_LR4Ralsto.em, chr="LG5", drop=1) #20cM between MTE32 and MTE34
+# the CI is given in positions, not in markers:
+ICfinT14<-lodint(QTLT14_LR4Ralsto.em, chr="LG5", drop=1)#12cM
+```
+
+* Graphic visualization listing all the information concerning the major QTL
+
+```{r graph_vis_all_14_em}
+plot(QTLT14_LR4Ralsto.em,chr="LG5",
+     show.marker.names=T,
+	xlab="Map Position on LG5 (cM)",
+     ylab="LOD Score LR4Ralsto_ScoreT14")
+abline(h=3,col="darkgreen",lty=2)
+abline(v=c(ICfinT14$pos), col=c("blue", "red", "blue"), lty=c(2,1,2))
+```
+
+## Major QTL IC comparisons on LG5 for 5 dpi and at 14 dpi
+
+```{r QTL_IC_comparisons}
+plot(QTLT5_LR4Ralsto.em, QTLT14_LR4Ralsto.em, chr="LG5",
+     show.marker.names=T,
+	xlab="Map Position on LG5 (cM)",
+     ylab="LOD Score LR4Ralsto")
+abline(h=3,col="darkgreen",lty=2)
+abline(v=c(ICfinT5$pos), col=c("black"), lty=c(2,1,2))
+abline(v=c(ICfinT14$pos), col=c("red"), lty=c(2,1,2))
+```
 
