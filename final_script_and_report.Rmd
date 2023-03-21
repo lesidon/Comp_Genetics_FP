@@ -134,7 +134,7 @@ As it was stated in the task, we would be able to detect QTL from mean disease s
 
 ```{r scanone_rm_5, echo=TRUE}
 QTLT5_LR4Ralsto.mr <- scanone(QTL_LR4RalstoDataRaw, pheno.col=3, method="mr")
-summary(QTLT7_LR4Ralsto.mr)
+summary(QTLT5_LR4Ralsto.mr)
 ```
 
 ## Analysis on the disease score at 14dpi
@@ -332,7 +332,7 @@ plot(QTLall_LR4Ralsto.hk, lodcolumn=7:9, col=c("violet", "cyan", "yellow"))
 # QTL_LR4RalstoData.operm.hk<-scanone(QTL_LR4RalstoData, pheno.col=2:10, method="hk", n.perm=1000)
 # save(QTL_LR4RalstoData.operm.hk, file = "QTL_LR4RalstoData.operm.hk.RData")
 
-load("QTL_LR5RalstoData.operm.hk.RData")
+load("QTL_LR4RalstoData.operm.hk.RData")
 
 summary(QTL_LR4RalstoData.operm.hk, alpha=0.05)
 ```
