@@ -541,4 +541,57 @@ It is interesting that we see more effect of this QTL. <!--Am I right, guys?-->
 
 # DETECTION OF QTL with Multiple QTL Mapping
 
+```{r}
+geno.image(QTL_LR4RalstoDataRaw)
+```
+Imput missing values and compare results.
+```{r}
+m.imp <- mqmaugment(QTL_LR4RalstoData, minprob=1.0)
+geno.image(m.imp)
+```
+
+Fit the Multiple QTL Mapping model without cofactors for 5dpi.
+```{r}
+abrev <- 'Disease index T5'        
+phenotype <- 3
+colonne <- phenotype-1
+
+Phenotype.MQMnocofactor <- mqmscan(m.imp, pheno.col=phenotype, window.size=10, step.size=1)
+
+```
+
+```{r}
+summary(Phenotype.MQMnocofactor, threshold=1.5)
+```
+
+```{r}
+summary(QTLall_LR4Ralsto.hk,threshold=1.5, lodcolumn=colonne)
+```
+As we can see, LOD scores for LG4:loc72 and LG5.loc17 are similar between MQM and HK
+```{r}
+plot(Phenotype.MQMnocofactor, 
+         chr='LG5',
+     show.marker.names=T, col=c('red'),
+#	xlab="Map Position on LG5 (cM)",
+     ylab="LOD Score")
+
+plot(QTLall_LR4Ralsto.hk,chr="LG5",
+     col=c('darkgreen'), add=T)
+
+abline(h=2.5,lty=2)
+
+legend('topright',col=c('darkgreen','red'),lwd=2,legend=c(paste(abrev,'; ehk'),paste(abrev,'; mqm')))
+
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+
 
