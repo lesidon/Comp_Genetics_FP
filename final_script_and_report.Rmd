@@ -569,14 +569,13 @@ summary(QTLall_LR4Ralsto.hk,threshold=1.5, lodcolumn=colonne)
 ```
 As we can see, LOD scores for LG4:loc72 and LG5.loc17 are similar between MQM and HK
 ```{r}
-plot(Phenotype.MQMnocofactor, 
-         chr='LG5',
-     show.marker.names=T, col=c('red'),
-#	xlab="Map Position on LG5 (cM)",
-     ylab="LOD Score")
+#subset only 5dpi from hk dataframe
+QTLall_LR4Ralsto_5dpi.hk <- QTLall_LR4Ralsto.hk[c("chr","pos","scoreajst5dpi")]
 
-plot(QTLall_LR4Ralsto.hk,chr="LG5",
-     col=c('darkgreen'), add=T)
+plot(QTLall_LR4Ralsto_5dpi.hk,chr="LG5",   show.marker.names=T, col=c('blue'), xlab="Map Position on LG5 (cM)", ylab="LOD Score")
+
+plot(Phenotype.MQMnocofactor, 
+         chr='LG5', col=c('red'),add=T)
 
 abline(h=2.5,lty=2)
 
@@ -584,6 +583,8 @@ legend('topright',col=c('darkgreen','red'),lwd=2,legend=c(paste(abrev,'; ehk'),p
 
 ```
 
+##MQM model with cofactors
+"Forward" cofactor search
 ```{r}
 ```
 
