@@ -319,10 +319,51 @@ plot(QTLall_LR4Ralsto.hk, lodcolumn=7:9, col=c("violet", "cyan", "yellow"))
 ```{r}
 # why do we need so many summaries?
 
-summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=1)  # cfu
-summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=2)  # T3
-summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=3)  # T5
-summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=5)  # T7
-summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=7)  # T14
+# summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=1)  # cfu
+# summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=2)  # T3
+# summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=3)  # T5
+# summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=5)  # T7
+# summary(QTLall_LR4Ralsto.hk,format="onepheno",lodcolumn=7)  # T14
 ```
+
+## Calculation of lod thresholds by permutation
+
+```{r}
+# QTL_LR4RalstoData.operm.hk<-scanone(QTL_LR4RalstoData, pheno.col=2:10, method="hk", n.perm=1000)
+# save(QTL_LR4RalstoData.operm.hk, file = "QTL_LR4RalstoData.operm.hk.RData")
+
+load("QTL_LR5RalstoData.operm.hk.RData")
+
+summary(QTL_LR4RalstoData.operm.hk, alpha=0.05)
+```
+
+```{r}
+summary(QTL_LR4RalstoData.operm.hk, alpha=0.1)
+summary(QTL_LR4RalstoData.operm.hk, alpha=0.01)
+```
+```{r}
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=1, alpha=0.05, pvalues=TRUE)
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=2, alpha=0.05, pvalues=TRUE)
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=3, alpha=0.05, pvalues=TRUE)
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=4, alpha=0.05, pvalues=TRUE)
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=5, alpha=0.05, pvalues=TRUE)
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=6, alpha=0.05, pvalues=TRUE)
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=7, alpha=0.05, pvalues=TRUE)
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=8, alpha=0.05, pvalues=TRUE)
+summary(QTLall_LR4Ralsto.hk, perms=QTL_LR4RalstoData.operm.hk, lodcolumn=9, alpha=0.05, pvalues=TRUE)
+```
+We will continue to work with 5 and 14 dpi. <!--But I am not actually sure if we have to use these values. Your thoughts?--->
+
+## Calculation of QTL confidence intervals and identification of flanking markers
+
+```{r}
+lodint(QTLall_LR4Ralsto.hk, lodcolumn=2, chr="LG5", expandtomarkers=TRUE, drop=1)
+lodint(QTLall_LR4Ralsto.hk, lodcolumn=2, chr="LG5", drop=1)
+
+lodint(QTLall_LR4Ralsto.hk, lodcolumn=6, chr="LG5", expandtomarkers=TRUE, drop=1)
+lodint(QTLall_LR4Ralsto.hk, lodcolumn=6, chr="LG5", drop=1)
+```
+
+
+
 
